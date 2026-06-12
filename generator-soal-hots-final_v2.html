@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator Soal HOTS SD — Ar-Rahmah</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #0EA5E9; --sky-d: #0284C7; --sky-l: #E0F2FE; --sky-p: #F0F9FF;
+  --gold: #F59E0B; --gold-l: #FEF3C7;
+  --white: #FFFFFF;
+  --s900: #0F172A; --s700: #334155; --s500: #64748B; --s400: #94A3B8;
+  --s300: #CBD5E1; --s200: #E2E8F0; --s100: #F1F5F9; --s50: #F8FAFC;
+  --green: #10B981; --green-l: #D1FAE5; --green-d: #065F46;
+  --purple: #8B5CF6; --purple-l: #EDE9FE; --purple-d: #5B21B6;
+  --orange: #F97316; --orange-l: #FFEDD5;
+  --red: #EF4444; --red-l: #FEE2E2;
+  --r: 12px; --rsm: 8px;
+  --sh: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(14,165,233,.07);
+  --sh-lg: 0 4px 6px rgba(0,0,0,.05), 0 10px 32px rgba(14,165,233,.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--s100); color:var(--s900); min-height:100vh; }
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #0C4A6E 0%, var(--sky-d) 50%, var(--sky) 100%);
+  padding: 0;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 20px rgba(2,132,199,.3);
+}
+.hdr-inner {
+  max-width: 1120px; margin: 0 auto;
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.hdr-icon {
+  width: 44px; height: 44px; border-radius: 11px;
+  background: rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.hdr-text h1 { color: #fff; font-size: 16px; font-weight: 800; line-height: 1.2; }
+.hdr-text p { color: rgba(255,255,255,.75); font-size: 11px; font-weight: 500; margin-top: 1px; }
+.hdr-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.api-status {
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+  background: rgba(255,255,255,.15); color: rgba(255,255,255,.9);
+  display: flex; align-items: center; gap: 5px;
+}
+.api-status.ok { background: rgba(16,185,129,.25); color: #6EE7B7; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* SETUP MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,23,42,.7);
+  backdrop-filter: blur(4px); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal {
+  background: var(--white); border-radius: 18px;
+  box-shadow: 0 25px 60px rgba(0,0,0,.3);
+  padding: 32px; max-width: 460px; width: 100%;
+}
+.modal-logo { font-size: 36px; text-align: center; margin-bottom: 6px; }
+.modal h2 { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+.modal .modal-sub { font-size: 13px; color: var(--s500); text-align: center; margin-bottom: 24px; line-height: 1.6; }
+.steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.step {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--s50); border-radius: var(--rsm); padding: 12px 14px;
+  border: 1px solid var(--s200);
+}
+.step-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--sky); color: #fff;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.step-text { font-size: 12.5px; color: var(--s700); line-height: 1.6; }
+.step-text a { color: var(--sky-d); font-weight: 600; }
+.step-text code {
+  background: var(--s200); padding: 1px 6px; border-radius: 4px;
+  font-family: 'Courier New', monospace; font-size: 11.5px; color: var(--s700);
+}
+.modal-input-wrap { margin-bottom: 16px; }
+.modal-input-wrap label { display: block; font-size: 12px; font-weight: 700; color: var(--s700); margin-bottom: 6px; letter-spacing: .4px; text-transform: uppercase; }
+.modal-input {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--s300); border-radius: var(--rsm);
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 13px;
+  color: var(--s900); background: var(--white); transition: border-color .2s;
+}
+.modal-input:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px rgba(14,165,233,.12); }
+.modal-input::placeholder { color: var(--s400); }
+.btn-connect {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--sky-d), var(--sky));
+  color: white; border: none; border-radius: var(--rsm);
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 15px; font-weight: 800;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-connect:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14,165,233,.35); }
+.modal-err { background: var(--red-l); color: #991B1B; border-radius: var(--rsm); padding: 10px 12px; font-size: 12.5px; margin-top: 10px; display: none; }
+
+/* MAIN */
+.main {
+  max-width: 1120px; margin: 0 auto; padding: 24px 16px;
+  display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start;
+}
+
+/* PANEL */
+.panel { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); overflow: hidden; }
+.panel-hdr {
+  background: var(--sky-p); border-bottom: 1px solid var(--sky-l);
+  padding: 13px 18px; display: flex; align-items: center; gap: 10px;
+}
+.panel-hdr-icon {
+  width: 30px; height: 30px; background: var(--sky); border-radius: 7px;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.panel-hdr h2 { font-size: 13.5px; font-weight: 700; color: var(--sky-d); }
+.panel-body { padding: 18px; }
+
+/* FORM */
+.fg { margin-bottom: 13px; }
+.fg label { display: block; font-size: 11.5px; font-weight: 700; color: var(--s700); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+.fg select, .fg input[type=text] {
+  width: 100%; padding: 9px 12px;
+  border: 1.5px solid var(--s300); border-radius: var(--rsm);
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 13px; color: var(--s900);
+  background: var(--white); appearance: none; transition: border-color .2s;
+}
+.fg select:focus, .fg input[type=text]:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px rgba(14,165,233,.1); }
+.sel-wrap { position: relative; }
+.sel-wrap::after { content: '▾'; position: absolute; right: 11px; top: 50%; transform: translateY(-50%); color: var(--sky); font-size: 11px; pointer-events: none; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.chip {
+  padding: 5px 11px; border: 1.5px solid var(--s300); border-radius: 20px;
+  font-size: 11.5px; font-weight: 600; color: var(--s500); cursor: pointer;
+  background: var(--white); transition: all .15s; user-select: none;
+}
+.chip:hover { border-color: var(--sky); color: var(--sky-d); }
+.chip.on { background: var(--sky-p); border-color: var(--sky); color: var(--sky-d); }
+
+.n-row { display: flex; gap: 6px; }
+.n-btn {
+  flex: 1; padding: 8px 4px; border: 1.5px solid var(--s300); border-radius: var(--rsm);
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--s500); cursor: pointer; background: var(--white); text-align: center; transition: all .15s;
+}
+.n-btn:hover { border-color: var(--sky); color: var(--sky-d); }
+.n-btn.on { background: var(--sky); border-color: var(--sky); color: #fff; }
+
+.tipe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tipe-btn {
+  padding: 8px 10px; border: 1.5px solid var(--s300); border-radius: var(--rsm);
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 11.5px; font-weight: 600;
+  color: var(--s500); cursor: pointer; background: var(--white); text-align: left;
+  transition: all .15s; display: flex; align-items: center; gap: 6px;
+}
+.tipe-btn:hover { border-color: var(--gold); color: var(--s700); }
+.tipe-btn.on { background: var(--gold-l); border-color: var(--gold); color: #92400E; }
+
+.divider { border: none; border-top: 1px solid var(--s200); margin: 13px 0; }
+
+.btn-gen {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--sky-d), var(--sky));
+  color: white; border: none; border-radius: var(--rsm);
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 14.5px; font-weight: 800;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 4px;
+}
+.btn-gen:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14,165,233,.35); }
+.btn-gen:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+.err-box {
+  background: var(--red-l); color: #991B1B; border-radius: var(--rsm);
+  padding: 10px 12px; font-size: 12.5px; margin-top: 10px; display: none; line-height: 1.5;
+}
+
+/* CP BOX */
+.cp-box {
+  background: var(--purple-l); border-radius: var(--rsm);
+  padding: 11px 13px; margin-top: 8px; display: none;
+  font-size: 12px; color: var(--s700); line-height: 1.65;
+}
+.cp-tag {
+  display: inline-block; background: var(--purple); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+  margin: 0 3px 4px 0;
+}
+
+/* OUTPUT */
+.output-wrap { display: flex; flex-direction: column; gap: 14px; }
+
+.empty-state { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 60px 24px; text-align: center; }
+.empty-icon { font-size: 50px; margin-bottom: 14px; }
+.empty-title { font-size: 16px; font-weight: 700; color: var(--s700); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; color: var(--s500); max-width: 280px; margin: 0 auto; }
+
+.loading-state { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); padding: 56px 24px; text-align: center; display: none; }
+.spinner { width: 44px; height: 44px; border: 4px solid var(--sky-l); border-top-color: var(--sky); border-radius: 50%; animation: spin .75s linear infinite; margin: 0 auto 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-size: 14px; font-weight: 600; color: var(--sky-d); }
+.loading-sub { font-size: 12px; color: var(--s500); margin-top: 4px; }
+
+/* RESULT */
+.result-panel { background: var(--white); border-radius: var(--r); box-shadow: var(--sh); overflow: hidden; display: none; }
+.result-hdr {
+  background: linear-gradient(135deg, var(--s900), #1E293B);
+  padding: 16px 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+}
+.result-hdr h3 { font-size: 14px; font-weight: 700; color: #fff; }
+.result-badges { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 5px; }
+.rb { font-size: 10.5px; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
+.rb-mapel { background: var(--sky); color: #fff; }
+.rb-fase { background: var(--gold); color: var(--s900); }
+.rb-hots { background: var(--purple); color: #fff; }
+.result-actions { display: flex; gap: 7px; flex-shrink: 0; }
+.btn-act {
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; padding: 6px 12px; border-radius: 6px;
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: background .2s; display: flex; align-items: center; gap: 5px;
+}
+.btn-act:hover { background: rgba(255,255,255,.25); }
+
+.result-body { padding: 18px; }
+
+/* SOAL ITEM */
+.soal-item { border: 1.5px solid var(--s200); border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: border-color .2s; }
+.soal-item:hover { border-color: var(--sky-l); }
+.soal-num-hdr {
+  background: var(--sky-p); border-bottom: 1px solid var(--sky-l);
+  padding: 8px 13px; display: flex; align-items: center; gap: 9px;
+}
+.soal-num-badge {
+  background: var(--sky); color: #fff; font-size: 11px; font-weight: 800;
+  width: 26px; height: 26px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+.soal-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.soal-meta-tag {
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+  background: var(--s100); color: var(--s500);
+}
+.soal-meta-tag.bloom { background: var(--purple-l); color: var(--purple-d); }
+.soal-meta-tag.tipe { background: var(--gold-l); color: #92400E; }
+
+.soal-content { padding: 13px 15px; }
+.stimulus {
+  background: var(--sky-p); border-left: 3px solid var(--sky);
+  padding: 9px 12px; border-radius: 0 6px 6px 0;
+  font-size: 12px; color: var(--s600); line-height: 1.65; margin-bottom: 9px;
+  font-style: italic;
+}
+.pertanyaan { font-size: 13.5px; font-weight: 500; line-height: 1.7; color: var(--s900); margin-bottom: 9px; }
+
+.opsi-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.opsi {
+  display: flex; gap: 8px; padding: 8px 10px;
+  border: 1.5px solid var(--s200); border-radius: 7px;
+  font-size: 12.5px; color: var(--s700); line-height: 1.5; align-items: flex-start;
+}
+.opsi.benar { border-color: var(--green); background: var(--green-l); color: var(--green-d); }
+.opsi-lbl { font-weight: 800; font-size: 11px; min-width: 17px; color: var(--sky-d); }
+.opsi.benar .opsi-lbl { color: var(--green); }
+
+.kunci-box {
+  background: var(--green-l); border: 1.5px solid var(--green);
+  border-radius: 7px; padding: 10px 12px; font-size: 12px; color: var(--green-d); margin-top: 6px; line-height: 1.6;
+}
+
+/* FOOTER */
+footer { text-align: center; font-size: 11px; color: var(--s400); padding: 18px; }
+
+/* CHANGE KEY BTN */
+.btn-change-key {
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.8); padding: 5px 10px; border-radius: 6px;
+  font-family: 'Plus Jakarta Sans',sans-serif; font-size: 11px; cursor: pointer;
+}
+.btn-change-key:hover { background: rgba(255,255,255,.2); }
+
+@media (max-width: 760px) {
+  .main { grid-template-columns: 1fr; }
+}
+
+@media print {
+  header, .main > div:first-child, footer { display: none !important; }
+  .main { display: block !important; }
+  .result-panel { display: block !important; box-shadow: none !important; }
+  .result-hdr { background: #0284C7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .result-actions { display: none !important; }
+  body { background: white !important; }
+  .soal-item { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal">
+    <div class="modal-logo">🔑</div>
+    <h2>Masukkan Gemini API Key</h2>
+    <p class="modal-sub">API key gratis dari Google AI Studio. Tersimpan hanya di browser Anda, tidak dikirim ke server mana pun.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Buka <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> lalu login dengan akun Google.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Klik <strong>"Create API Key"</strong> → pilih project → salin key yang muncul.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Paste key di bawah. Format: <code>AIzaSy...</code></div>
+      </div>
+    </div>
+    <div class="modal-input-wrap">
+      <label>Gemini API Key</label>
+      <input class="modal-input" type="password" id="apiKeyInput" placeholder="AIzaSy...">
+    </div>
+    <button class="btn-connect" onclick="saveKey()">✓ Simpan &amp; Mulai</button>
+    <div class="modal-err" id="modalErr"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-inner">
+    <div class="hdr-icon">🧠</div>
+    <div class="hdr-text">
+      <h1>Generator Soal HOTS SD</h1>
+      <p>Berbasis Capaian Pembelajaran 2025 · BSKAP 046 · Powered by Gemini AI</p>
+    </div>
+    <div class="hdr-actions">
+      <div class="api-status" id="apiStatus">
+        <span class="status-dot"></span> <span id="apiStatusText">Belum terhubung</span>
+      </div>
+      
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: KONTROL -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-hdr-icon">📋</div>
+        <h2>Konfigurasi Soal</h2>
+      </div>
+      <div class="panel-body">
+
+        <div class="fg">
+          <label>Mata Pelajaran</label>
+          <div class="sel-wrap">
+            <select id="mapel" onchange="updateCP()">
+              <option value="">— Pilih Mapel —</option>
+              <option value="PAI">PAI &amp; Budi Pekerti</option>
+              <option value="PPKn">PPKn (Pancasila)</option>
+              <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+              <option value="Matematika">Matematika</option>
+              <option value="IPAS">IPAS</option>
+              <option value="Seni Budaya">Seni Budaya &amp; Prakarya</option>
+              <option value="PJOK">PJOK</option>
+              <option value="Bahasa Inggris">Bahasa Inggris</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Fase / Kelas</label>
+          <div class="sel-wrap">
+            <select id="fase" onchange="updateCP()">
+              <option value="">— Pilih Fase —</option>
+              <option value="Fase A (Kelas 1-2)">Fase A — Kelas 1 &amp; 2</option>
+              <option value="Fase B (Kelas 3-4)">Fase B — Kelas 3 &amp; 4</option>
+              <option value="Fase C (Kelas 5-6)">Fase C — Kelas 5 &amp; 6</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="cpBox" class="cp-box"></div>
+
+        <div class="fg" style="margin-top:10px">
+          <label>Topik / Materi <span style="font-weight:400;color:var(--s400);text-transform:none;letter-spacing:0">(opsional)</span></label>
+          <input type="text" id="topik" placeholder="contoh: ekosistem, bilangan bulat, sholat…">
+        </div>
+
+        <div class="fg">
+          <label>Konteks Lokal <span style="font-weight:400;color:var(--s400);text-transform:none;letter-spacing:0">(opsional)</span></label>
+          <input type="text" id="konteks" placeholder="contoh: Makassar, pesisir, pasar tradisional…">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="fg">
+          <label>Level Bloom (HOTS)</label>
+          <div class="chip-row" id="hotsRow">
+            <span class="chip" data-v="C4" onclick="pickChip(this,'hotsRow')">C4 — Menganalisis</span>
+            <span class="chip" data-v="C5" onclick="pickChip(this,'hotsRow')">C5 — Mengevaluasi</span>
+            <span class="chip on" data-v="C4+C5" onclick="pickChip(this,'hotsRow')">C4+C5 Campuran</span>
+            <span class="chip" data-v="C6" onclick="pickChip(this,'hotsRow')">C6 — Mencipta</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="fg">
+          <label>Tipe Soal</label>
+          <div class="tipe-grid">
+            <button class="tipe-btn on" data-v="Pilihan Ganda" onclick="pickTipe(this)">🔘 Pilihan Ganda</button>
+            <button class="tipe-btn" data-v="Isian Singkat" onclick="pickTipe(this)">✏️ Isian Singkat</button>
+            <button class="tipe-btn" data-v="Uraian" onclick="pickTipe(this)">📝 Uraian</button>
+            <button class="tipe-btn" data-v="Campuran" onclick="pickTipe(this)">🎲 Campuran</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="fg">
+          <label>Jumlah Soal</label>
+          <div class="n-row">
+            <button class="n-btn" data-v="5" onclick="pickN(this)">5</button>
+            <button class="n-btn on" data-v="10" onclick="pickN(this)">10</button>
+            <button class="n-btn" data-v="15" onclick="pickN(this)">15</button>
+            <button class="n-btn" data-v="20" onclick="pickN(this)">20</button>
+          </div>
+        </div>
+
+        <div id="errBox" class="err-box"></div>
+
+        <button class="btn-gen" id="btnGen" onclick="generate()">✨ Generate Soal HOTS</button>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: OUTPUT -->
+  <div class="output-wrap" id="outputWrap">
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📄</div>
+      <div class="empty-title">Siap generate soal HOTS</div>
+      <div class="empty-sub">Pilih mata pelajaran, fase, konfigurasi di kiri, lalu klik Generate</div>
+    </div>
+
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <div class="loading-title">Gemini AI sedang menyusun soal…</div>
+      <div class="loading-sub">Menganalisis CP dan merancang pertanyaan HOTS</div>
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+      <div class="result-hdr">
+        <div>
+          <h3 id="resultTitle">Bank Soal HOTS</h3>
+          <div class="result-badges">
+            <span class="rb rb-mapel" id="badgeMapel"></span>
+            <span class="rb rb-fase" id="badgeFase"></span>
+            <span class="rb rb-hots" id="badgeHots"></span>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn-act" onclick="copySoal()">📋 Salin</button>
+          <button class="btn-act" onclick="window.print()">🖨️ Cetak</button>
+        </div>
+      </div>
+      <div class="result-body" id="resultBody"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>Generator Soal HOTS · SDIT Ar-Rahmah Makassar · Direktorat Media &amp; Marketing Yayasan Ar-Rahmah Sulawesi</footer>
+
+<script>
+// ─── CP DATABASE ───
+const CP = {
+  "PAI": {
+    "Fase A (Kelas 1-2)": { e:["Al-Qur'an & Hadits","Aqidah","Akhlak","Fiqih","Sejarah Islam"], cp:"Peserta didik mengenal huruf hijaiyah, membaca basmalah, mengenal rukun iman dan rukun Islam, membiasakan perilaku jujur dan kasih sayang, mengenal tata cara bersuci, dan kisah Nabi Muhammad SAW.", t:["huruf hijaiyah","rukun iman","rukun Islam","perilaku jujur","wudhu","kisah Nabi"] },
+    "Fase B (Kelas 3-4)": { e:["Al-Qur'an & Hadits","Aqidah","Akhlak","Fiqih","Sejarah Islam"], cp:"Peserta didik membaca Al-Qur'an dengan tartil, memahami asmaul husna, menerapkan perilaku amanah dan rendah hati, memahami sholat berjamaah dan puasa Ramadan, serta meneladani Khulafaur Rasyidin.", t:["asmaul husna","sholat berjamaah","puasa Ramadan","Khulafaur Rasyidin","amanah"] },
+    "Fase C (Kelas 5-6)": { e:["Al-Qur'an & Hadits","Aqidah","Akhlak","Fiqih","Sejarah Islam"], cp:"Peserta didik menganalisis kandungan ayat tentang akhlak mulia, memahami iman kepada qada dan qadar, menerapkan adab bergaul dan gotong royong, memahami haji dan zakat, dan menganalisis perkembangan Islam di Nusantara.", t:["qada dan qadar","haji","zakat","Islam di Nusantara","adab bergaul"] }
+  },
+  "PPKn": {
+    "Fase A (Kelas 1-2)": { e:["Pancasila","UUD 1945","Bhinneka Tunggal Ika","NKRI"], cp:"Peserta didik mengenal simbol sila Pancasila, memahami aturan di rumah dan sekolah, mengenal keberagaman budaya, serta menunjukkan sikap cinta tanah air.", t:["Pancasila","aturan di rumah","keberagaman","simbol negara"] },
+    "Fase B (Kelas 3-4)": { e:["Pancasila","UUD 1945","Bhinneka Tunggal Ika","NKRI"], cp:"Peserta didik menerapkan nilai Pancasila, memahami hak dan kewajiban, menghargai keberagaman suku dan budaya, serta mengenal lembaga negara.", t:["hak dan kewajiban","keberagaman suku","lembaga negara","nilai Pancasila"] },
+    "Fase C (Kelas 5-6)": { e:["Pancasila","UUD 1945","Bhinneka Tunggal Ika","NKRI"], cp:"Peserta didik menganalisis penerapan nilai Pancasila, memahami demokrasi dan pemilu, menganalisis keberagaman dan upaya menjaga persatuan, serta memahami bela negara.", t:["demokrasi","pemilu","bela negara","persatuan bangsa"] }
+  },
+  "Bahasa Indonesia": {
+    "Fase A (Kelas 1-2)": { e:["Menyimak","Membaca & Memirsa","Berbicara","Menulis"], cp:"Peserta didik menyimak dan merespons instruksi sederhana, membaca kata dan kalimat sederhana, menceritakan pengalaman pribadi, dan menulis huruf serta kata dengan benar.", t:["membaca nyaring","menulis huruf","cerita pengalaman","kalimat sederhana"] },
+    "Fase B (Kelas 3-4)": { e:["Menyimak","Membaca & Memirsa","Berbicara","Menulis"], cp:"Peserta didik membaca teks informasi dan fiksi dengan pemahaman, mengidentifikasi ide pokok, menyampaikan pendapat, dan menulis laporan serta deskripsi sederhana.", t:["ide pokok","teks informasi","laporan","fiksi dan nonfiksi"] },
+    "Fase C (Kelas 5-6)": { e:["Menyimak","Membaca & Memirsa","Berbicara","Menulis"], cp:"Peserta didik menganalisis berbagai jenis teks, membandingkan sudut pandang, menyampaikan argumen, menulis teks persuasif dan eksposisi, serta memahami penggunaan bahasa secara kritis.", t:["teks persuasif","argumen logis","sudut pandang","eksposisi","kritik teks"] }
+  },
+  "Matematika": {
+    "Fase A (Kelas 1-2)": { e:["Bilangan","Pengukuran","Geometri","Analisis Data"], cp:"Peserta didik mengenal bilangan cacah hingga 100, melakukan penjumlahan dan pengurangan, mengenal bangun datar, memahami pengukuran dengan satuan tidak baku, serta membaca data sederhana.", t:["bilangan cacah","penjumlahan","pengurangan","bangun datar","pengukuran"] },
+    "Fase B (Kelas 3-4)": { e:["Bilangan","Aljabar","Pengukuran","Geometri","Analisis Data"], cp:"Peserta didik memahami perkalian dan pembagian, pecahan dan desimal dasar, keliling dan luas bangun datar, satuan baku, dan menyajikan data dalam diagram.", t:["perkalian","pecahan","keliling bangun datar","diagram batang","desimal"] },
+    "Fase C (Kelas 5-6)": { e:["Bilangan","Aljabar","Pengukuran","Geometri","Analisis Data"], cp:"Peserta didik memahami bilangan bulat dan rasional, operasi hitung campuran, rasio dan proporsi, luas dan volume bangun ruang, persamaan linear sederhana, serta menafsirkan data statistik.", t:["bilangan bulat","rasio proporsi","volume bangun ruang","statistik","persamaan linear"] }
+  },
+  "IPAS": {
+    "Fase A (Kelas 1-2)": { e:["Pemahaman IPAS","Keterampilan Proses"], cp:"Peserta didik mengenal anggota tubuh dan fungsinya, siklus hidup makhluk hidup sederhana, kondisi cuaca dan dampaknya, serta panca indera untuk mengamati lingkungan.", t:["anggota tubuh","siklus hidup","cuaca","panca indera","tumbuhan"] },
+    "Fase B (Kelas 3-4)": { e:["Pemahaman IPAS","Keterampilan Proses"], cp:"Peserta didik memahami sistem organ, ekosistem dan rantai makanan, perubahan wujud benda, sumber daya alam, serta geografi Indonesia.", t:["ekosistem","rantai makanan","perubahan wujud","sumber daya alam","geografi"] },
+    "Fase C (Kelas 5-6)": { e:["Pemahaman IPAS","Keterampilan Proses"], cp:"Peserta didik menganalisis sistem organ manusia, gaya dan energi, perubahan iklim dan dampaknya, tata surya, adaptasi makhluk hidup, serta sejarah kerajaan dan teknologi.", t:["sistem organ","gaya dan energi","perubahan iklim","tata surya","adaptasi makhluk hidup"] }
+  },
+  "Seni Budaya": {
+    "Fase A (Kelas 1-2)": { e:["Mengalami","Merefleksikan","Berpikir Artistik","Berdampak"], cp:"Peserta didik mengeksplorasi unsur seni melalui berkarya sederhana, mengenal ragam seni budaya lokal, dan mengungkapkan pengalaman estetis secara verbal.", t:["unsur seni","lagu daerah","gerak tari","kerajinan sederhana"] },
+    "Fase B (Kelas 3-4)": { e:["Mengalami","Merefleksikan","Berpikir Artistik","Berdampak"], cp:"Peserta didik berkarya dengan berbagai media dan teknik, memahami fungsi seni, mengidentifikasi ragam seni Nusantara, dan merefleksikan proses kreatif.", t:["teknik kolase","tari tradisional","musik ansambel","seni rupa daerah"] },
+    "Fase C (Kelas 5-6)": { e:["Mengalami","Merefleksikan","Berpikir Artistik","Berdampak"], cp:"Peserta didik menganalisis karya seni, menciptakan karya orisinal terinspirasi tradisi lokal, menghargai keberagaman seni, dan memahami seni sebagai ekspresi budaya.", t:["analisis karya seni","warisan budaya","proses kreatif","seni kontemporer"] }
+  },
+  "PJOK": {
+    "Fase A (Kelas 1-2)": { e:["Keterampilan Gerak","Pengetahuan Gerak","Pemanfaatan Gerak","Karakter"], cp:"Peserta didik menunjukkan kemampuan gerak dasar, memahami arti sehat, menerapkan perilaku hidup bersih dan sehat, serta bermain jujur dan sportif.", t:["gerak dasar","hidup bersih","sportivitas","permainan sederhana"] },
+    "Fase B (Kelas 3-4)": { e:["Keterampilan Gerak","Pengetahuan Gerak","Pemanfaatan Gerak","Karakter"], cp:"Peserta didik menguasai gerak dasar atletik dan permainan bola, memahami kebugaran jasmani, menerapkan gizi seimbang, dan menunjukkan kerja sama dalam olahraga beregu.", t:["atletik dasar","permainan bola","kebugaran jasmani","gizi seimbang"] },
+    "Fase C (Kelas 5-6)": { e:["Keterampilan Gerak","Pengetahuan Gerak","Pemanfaatan Gerak","Karakter"], cp:"Peserta didik menganalisis teknik olahraga, memahami prinsip kesehatan, mengevaluasi program latihan, dan menerapkan fair play dalam kompetisi.", t:["teknik olahraga","kesehatan reproduksi","program latihan","fair play"] }
+  },
+  "Bahasa Inggris": {
+    "Fase A (Kelas 1-2)": { e:["Menyimak","Membaca","Menulis"], cp:"Peserta didik merespons instruksi sederhana, mengenal kosakata dasar tentang diri dan lingkungan, serta membaca dan menulis kata sederhana.", t:["greetings","numbers","colors","family","classroom objects"] },
+    "Fase B (Kelas 3-4)": { e:["Menyimak","Membaca","Menulis"], cp:"Peserta didik memahami teks deskriptif dan naratif pendek, menggunakan kalimat sederhana untuk berkomunikasi, dan menulis kalimat dalam konteks sehari-hari.", t:["descriptive text","daily routines","animals","hobbies"] },
+    "Fase C (Kelas 5-6)": { e:["Menyimak","Membaca","Menulis"], cp:"Peserta didik memahami berbagai jenis teks, berkomunikasi untuk tujuan tertentu, menulis teks terstruktur, dan menganalisis pilihan kata dalam konteks komunikasi.", t:["procedure text","opinion paragraph","advertisement","environment"] }
+  }
+};
+
+// ─── STATE ───
+let selHOTS = "C4+C5", selTipe = "Pilihan Ganda", selN = 10, plainTxt = "";
+let API_KEY = "AQ.Ab8RN6JRS7lOnpaPZntXOPtxLmKdmT6XUlqX0O9IWyPJuGfIQg";
+
+// ─── INIT ───
+window.onload = () => { hideModal(); updateStatus(true); return; // key pre-embedded
+  const saved = localStorage.getItem("gemini_api_key");
+  if (saved) { API_KEY = saved; hideModal(); updateStatus(true); }
+};
+
+function saveKey() {
+  const v = document.getElementById("apiKeyInput").value.trim();
+  if (!v || !v.startsWith("AIza")) {
+    document.getElementById("modalErr").textContent = "Format API key tidak valid. Harus diawali dengan AIza...";
+    document.getElementById("modalErr").style.display = "block";
+    return;
+  }
+  API_KEY = v;
+  localStorage.setItem("gemini_api_key", v);
+  hideModal();
+  updateStatus(true);
+}
+
+function hideModal() { document.getElementById("setupModal").style.display = "none"; }
+function changeKey() {
+  document.getElementById("apiKeyInput").value = API_KEY;
+  document.getElementById("setupModal").style.display = "flex";
+}
+function updateStatus(ok) {
+  const s = document.getElementById("apiStatus");
+  const t = document.getElementById("apiStatusText");
+  if (ok) { s.classList.add("ok"); t.textContent = "Gemini terhubung"; }
+  else { s.classList.remove("ok"); t.textContent = "Belum terhubung"; }
+}
+
+// ─── CHIP PICKERS ───
+function pickChip(el, rowId) {
+  document.querySelectorAll("#" + rowId + " .chip").forEach(c => c.classList.remove("on"));
+  el.classList.add("on");
+  selHOTS = el.dataset.v;
+}
+function pickTipe(el) {
+  document.querySelectorAll(".tipe-btn").forEach(b => b.classList.remove("on"));
+  el.classList.add("on");
+  selTipe = el.dataset.v;
+}
+function pickN(el) {
+  document.querySelectorAll(".n-btn").forEach(b => b.classList.remove("on"));
+  el.classList.add("on");
+  selN = parseInt(el.dataset.v);
+}
+
+function updateCP() {
+  const m = document.getElementById("mapel").value;
+  const f = document.getElementById("fase").value;
+  const box = document.getElementById("cpBox");
+  if (!m || !f || !CP[m]?.[f]) { box.style.display = "none"; return; }
+  const d = CP[m][f];
+  let h = '<div style="margin-bottom:7px">';
+  d.e.forEach(e => { h += `<span class="cp-tag">${e}</span>`; });
+  h += `</div><div style="margin-bottom:6px">${d.cp}</div>`;
+  h += `<div style="font-size:11px;color:var(--s500)">💡 Topik: ${d.t.join(", ")}</div>`;
+  box.innerHTML = h;
+  box.style.display = "block";
+}
+
+function showErr(msg) {
+  const b = document.getElementById("errBox");
+  b.textContent = "⚠️ " + msg;
+  b.style.display = "block";
+}
+function hideErr() { document.getElementById("errBox").style.display = "none"; }
+
+// ─── GENERATE ───
+async function generate() {
+  if (!API_KEY) { document.getElementById("setupModal").style.display = "flex"; return; }
+
+  const m = document.getElementById("mapel").value;
+  const f = document.getElementById("fase").value;
+  const topik = document.getElementById("topik").value.trim();
+  const konteks = document.getElementById("konteks").value.trim();
+  hideErr();
+
+  if (!m) { showErr("Pilih mata pelajaran terlebih dahulu."); return; }
+  if (!f) { showErr("Pilih fase/kelas terlebih dahulu."); return; }
+
+  const d = CP[m]?.[f];
+  if (!d) { showErr("Data CP tidak ditemukan."); return; }
+
+  const topikFinal = topik || d.t[Math.floor(Math.random() * d.t.length)];
+  const konteksFinal = konteks || "kehidupan sehari-hari siswa SD Indonesia";
+
+  // UI loading
+  document.getElementById("emptyState").style.display = "none";
+  document.getElementById("resultPanel").style.display = "none";
+  document.getElementById("loadingState").style.display = "block";
+  document.getElementById("btnGen").disabled = true;
+
+  const prompt = `Kamu adalah guru SD berpengalaman yang ahli membuat soal HOTS (Higher Order Thinking Skills) berdasarkan Kurikulum Merdeka Indonesia.
+
+DATA CAPAIAN PEMBELAJARAN:
+- Mata Pelajaran: ${m}
+- Fase: ${f}
+- Elemen CP: ${d.e.join(", ")}
+- Capaian Pembelajaran: ${d.cp}
+- Topik Fokus: ${topikFinal}
+- Konteks Lokal: ${konteksFinal}
+
+INSTRUKSI:
+Buat TEPAT ${selN} soal HOTS level ${selHOTS} (Bloom's Taxonomy) bertipe ${selTipe}.
+
+ATURAN WAJIB:
+1. Setiap soal HARUS mengandung STIMULUS (wacana/data/kasus kontekstual) yang relevan
+2. Pertanyaan menuntut ANALISIS atau EVALUASI, bukan sekadar hafalan
+3. Gunakan konteks lokal: ${konteksFinal}
+4. Bahasa sesuai usia siswa ${f}
+5. Untuk Pilihan Ganda: buat 4 pilihan (A/B/C/D), satu benar, distractor harus masuk akal
+6. Untuk Isian Singkat dan Uraian: sertakan kunci jawaban dan rubrik penilaian singkat
+
+FORMAT RESPONS — kembalikan HANYA JSON valid, tanpa markdown, tanpa teks penjelasan:
+{"soal":[{"nomor":1,"level_bloom":"C4","tipe":"Pilihan Ganda","stimulus":"...","pertanyaan":"...","opsi":{"A":"...","B":"...","C":"...","D":"..."},"kunci":"A","indikator_cp":"..."}]}
+
+Untuk isian/uraian, format item:
+{"nomor":2,"level_bloom":"C5","tipe":"Isian Singkat","stimulus":"...","pertanyaan":"...","kunci":"...","rubrik":"...","indikator_cp":"..."}`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 8192 }
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      const errMsg = data.error?.message || "API error " + res.status;
+      if (res.status === 400 && errMsg.includes("API_KEY")) throw new Error("API key tidak valid. Klik 🔑 Ganti Key.");
+      if (res.status === 429) throw new Error("Kuota API habis. Coba beberapa saat lagi.");
+      throw new Error(errMsg);
+    }
+
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const clean = raw.replace(/```json|```/g, "").trim();
+
+    let parsed;
+    try { parsed = JSON.parse(clean); }
+    catch {
+      const match = clean.match(/\{[\s\S]*\}/);
+      if (match) parsed = JSON.parse(match[0]);
+      else throw new Error("Format JSON tidak valid dari AI. Coba generate ulang.");
+    }
+
+    renderResult(parsed.soal, m, f, topikFinal);
+
+  } catch (err) {
+    document.getElementById("loadingState").style.display = "none";
+    document.getElementById("emptyState").style.display = "block";
+    showErr(err.message);
+  } finally {
+    document.getElementById("btnGen").disabled = false;
+    document.getElementById("loadingState").style.display = "none";
+  }
+}
+
+// ─── RENDER ───
+function renderResult(arr, mapel, fase, topik) {
+  document.getElementById("badgeMapel").textContent = mapel;
+  document.getElementById("badgeFase").textContent = fase;
+  document.getElementById("badgeHots").textContent = "HOTS " + selHOTS;
+  document.getElementById("resultTitle").textContent = "Bank Soal HOTS — " + topik;
+
+  plainTxt = `BANK SOAL HOTS — ${mapel} | ${fase} | ${selHOTS}\nTopik: ${topik}\n${"=".repeat(58)}\n\n`;
+  let html = "";
+
+  arr.forEach((soal, i) => {
+    const isPG = soal.opsi && Object.keys(soal.opsi).length > 0;
+    const n = soal.nomor || (i + 1);
+
+    html += `<div class="soal-item">
+      <div class="soal-num-hdr">
+        <div class="soal-num-badge">${n}</div>
+        <div class="soal-meta">
+          <span class="soal-meta-tag bloom">${soal.level_bloom || selHOTS}</span>
+          <span class="soal-meta-tag tipe">${soal.tipe || selTipe}</span>
+          ${soal.indikator_cp ? `<span class="soal-meta-tag">${soal.indikator_cp.slice(0, 55)}${soal.indikator_cp.length > 55 ? "…" : ""}</span>` : ""}
+        </div>
+      </div>
+      <div class="soal-content">
+        ${soal.stimulus ? `<div class="stimulus">📖 ${soal.stimulus}</div>` : ""}
+        <div class="pertanyaan">${soal.pertanyaan}</div>`;
+
+    if (isPG) {
+      html += '<ul class="opsi-list">';
+      ["A","B","C","D"].forEach(k => {
+        if (soal.opsi[k]) {
+          const benar = soal.kunci === k;
+          html += `<li class="opsi${benar ? " benar" : ""}"><span class="opsi-lbl">${k}.</span><span>${soal.opsi[k]}${benar ? " ✓" : ""}</span></li>`;
+        }
+      });
+      html += "</ul>";
+    } else if (soal.kunci) {
+      html += `<div class="kunci-box"><strong>Jawaban:</strong> ${soal.kunci}${soal.rubrik ? `<div style="margin-top:5px"><strong>Rubrik:</strong> ${soal.rubrik}</div>` : ""}</div>`;
+    }
+
+    html += `</div></div>`;
+
+    // plain text
+    plainTxt += `SOAL ${n} [${soal.level_bloom || selHOTS}] — ${soal.tipe || selTipe}\n`;
+    if (soal.stimulus) plainTxt += `Stimulus: ${soal.stimulus}\n`;
+    plainTxt += soal.pertanyaan + "\n";
+    if (isPG) {
+      ["A","B","C","D"].forEach(k => { if (soal.opsi[k]) plainTxt += `  ${k}. ${soal.opsi[k]}\n`; });
+      plainTxt += `Kunci: ${soal.kunci}\n`;
+    } else if (soal.kunci) {
+      plainTxt += `Jawaban: ${soal.kunci}\n`;
+      if (soal.rubrik) plainTxt += `Rubrik: ${soal.rubrik}\n`;
+    }
+    plainTxt += "\n";
+  });
+
+  document.getElementById("resultBody").innerHTML = html;
+  document.getElementById("resultPanel").style.display = "block";
+  document.getElementById("resultPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function copySoal() {
+  if (!plainTxt) return;
+  navigator.clipboard.writeText(plainTxt).then(() => {
+    const btn = document.querySelector(".btn-act");
+    const ori = btn.innerHTML;
+    btn.innerHTML = "✅ Disalin!";
+    setTimeout(() => { btn.innerHTML = ori; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
